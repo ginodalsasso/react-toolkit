@@ -1,0 +1,54 @@
+
+{
+    "components": {
+        "button": {
+            "name": "Button",
+            "type": "component",
+            "description": "Button component for user interactions",
+            "files": [
+                "Button.tsx",
+                "Button.module.css"
+            ],
+            "dependencies": [
+                "react"
+            ],
+            "devDependencies": [
+                "@types/react",
+                "typescript"
+            ],
+            "registryDependencies": [],
+            "tags": ["ui", "form", "button"],
+            "examples": [
+                {
+                "name": "Basic",
+                "code": "<Button>Click me</Button>"
+                },
+                {
+                "name": "With variant",
+                "code": "<Button variant=\"secondary\" size=\"small\" type=\"submit\">Secondary</Button>"
+                }
+            ]
+        }
+    },
+
+    "utils": {
+        "dateToString": {
+            "name": "dateToString",
+            "type": "util",
+            "description": "Formats a date object into a string",
+            "files": [
+                "dateToString.ts"
+            ],
+            "dependencies": [],
+            "devDependencies": [],
+            "registryDependencies": [],
+            "tags": ["date", "utility", "formatting"],
+            "examples": [
+                {
+                "name": "Basic usage",
+                "code": "const dateString = dateToString(new Date());"
+                }
+            ]
+        }
+    }
+}

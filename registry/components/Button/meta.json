@@ -1,0 +1,29 @@
+
+{
+    "name": "Button",
+    "type": "component",
+    "description": "Button component for user interactions",
+    "files": [
+        "Button.tsx",
+        "Button.module.css"
+    ],
+    "dependencies": [
+        "react"
+    ],
+    "devDependencies": [
+        "@types/react",
+        "typescript"
+    ],
+    "registryDependencies": [],
+    "tags": ["ui", "form", "button"],
+    "examples": [
+        {
+        "name": "Basic",
+        "code": "<Button>Click me</Button>"
+        },
+        {
+        "name": "With variant",
+        "code": "<Button variant=\"secondary\" size=\"small\" type=\"submit\">Secondary</Button>"
+        }
+    ]
+}

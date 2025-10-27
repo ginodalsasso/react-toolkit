@@ -1,0 +1,19 @@
+
+{
+    "name": "dateToString",
+    "type": "util",
+    "description": "Formats a date object into a string",
+    "files": [
+        "dateToString.ts"
+    ],
+    "dependencies": [],
+    "devDependencies": [],
+    "registryDependencies": [],
+    "tags": ["date", "utility", "formatting"],
+    "examples": [
+        {
+        "name": "Basic usage",
+        "code": "const dateString = dateToString(new Date());"
+        }
+    ]
+}

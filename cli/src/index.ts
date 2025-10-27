@@ -1,5 +1,6 @@
 import { Command } from "commander";
 import chalk from "chalk";
+import { listCommand } from "./commands/list";
 
 const program = new Command();
 
@@ -25,9 +26,7 @@ program
 program
     .command("list")
     .description("List all components and utils")
-    .action(() => {
-        console.log(chalk.yellow("Listing all components..."));
-    });
+    .action(listCommand);
 
 // Init commands
 program
