@@ -1,7 +1,14 @@
 import chalk from "chalk";
-import { getAllItems, getRegistry } from "../utils/registry";
+import { getRegistry } from "../utils/registry.js";
 
-export function listCommand() {
+/**
+ * List command to display all components and utilities from the registry
+ * @param options - Command options to filter by components or utilities
+ * ex: npm run dev -- list --components / npm run dev -- list --utils
+ */
+
+export function listCommand(options?: { components?: boolean; utils?: boolean }) {
+
     const registry = getRegistry();
     const components = registry.components;
     const utils = registry.utils;
@@ -11,25 +18,41 @@ export function listCommand() {
         return;
     }
     
-    const totalItems = Object.keys(components).length + Object.keys(utils).length;
-    console.log(chalk.yellow(`Total: ${totalItems} items\n`));
+    console.log(chalk.cyan(`Found the following components and utilities:\n`));
 
-    console.log(chalk.green(`Found the following components and utilities:`));
+    const showComponents = !options?.utils || options?.components; 
+    const showUtils = !options?.components || options?.utils;
+    
     // components
-    Object.entries(components).forEach(([key, item], index) => {
-        const isLast = index === Object.entries(components).length - 1;
-        const prefix = isLast ? '└─' : '├─';
-        console.log(`  ${prefix} ${chalk.green(item.name)} - ${item.description}`);
-        console.log(`     ${chalk.gray(`Tags: ${item.tags.join(', ')}`)}`);
-        console.log('');
-    });
+    if (showComponents && Object.keys(components).length > 0) {
+        console.log(chalk.bold.cyan(`Components (${Object.keys(components).length})`));
+        Object.entries(components).forEach(([key, item], index) => {
+            const isLast = index === Object.entries(components).length - 1;
+            const prefix = isLast ? '└─' : '├─';
 
+            console.log(chalk.bold.cyan(`Components (${Object.keys(components).length})`));
+            console.log(`  ${prefix} ${chalk.green.bold.underline(item.name)} - ${item.description}`);
+            console.log(`     ${chalk.gray(`Tags: ${item.tags.join(', ')}`)}`);
+            console.log('');
+        });
+    }
+    
     // utils
-    Object.entries(utils).forEach(([key, item], index) => {
-        const isLast = index === Object.entries(utils).length - 1;
-        const prefix = isLast ? '└─' : '├─';
-        console.log(`  ${prefix} ${chalk.green(item.name)} - ${item.description}`);
-        console.log(`     ${chalk.gray(`Tags: ${item.tags.join(', ')}`)}`);
-        console.log('');
-    });
+    if (showUtils && Object.keys(utils).length > 0) {
+        console.log(chalk.bold.cyan(`Utilities (${Object.keys(utils).length})`));
+        Object.entries(utils).forEach(([key, item], index) => {
+            const isLast = index === Object.entries(utils).length - 1;
+            const prefix = isLast ? '└─' : '├─';
+
+            console.log(chalk.bold.cyan(`Utilities (${Object.keys(utils).length})`));
+            console.log(`  ${prefix} ${chalk.green.bold.underline(item.name)} - ${item.description}`);
+            console.log(`     ${chalk.gray(`Tags: ${item.tags.join(', ')}`)}`);
+            console.log('');
+        });
+        return;
+    }
+
+    // total
+    const totalItems = Object.keys(components).length + Object.keys(utils).length;
+    console.log(chalk.yellow(`Total: ${totalItems} items`));
 }

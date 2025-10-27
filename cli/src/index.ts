@@ -26,7 +26,11 @@ program
 program
     .command("list")
     .description("List all components and utils")
-    .action(listCommand);
+    .option('-c, --components', 'List only components')
+    .option('-u, --utils', 'List only utilities')
+    .action((options) => {
+        listCommand(options);
+    });
 
 // Init commands
 program

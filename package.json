@@ -6,6 +6,6 @@
   "workspaces": ["cli"],
   "scripts": {
     "dev": "npm run dev --workspace=cli",
-    "build": "npm run build --workspace=cli",
+    "build": "npm run build --workspace=cli"
   }
 }
