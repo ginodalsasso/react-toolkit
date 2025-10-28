@@ -19,3 +19,11 @@ export interface Registry {
     components: Record<string, RegistryItem>;
     utils: Record<string, RegistryItem>;
 }
+
+// CLI Configuration
+export interface CliConfig {
+    componentsPath: string;
+    utilsPath: string;
+    typescript: boolean;
+    styling: 'css-modules' | 'tailwind' | 'css';
+}
