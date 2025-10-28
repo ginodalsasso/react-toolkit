@@ -1,6 +1,7 @@
 import { Command } from "commander";
 import chalk from "chalk";
 import { listCommand } from "./commands/list";
+import { initCommand } from "./commands/init";
 
 const program = new Command();
 
@@ -36,9 +37,7 @@ program
 program
     .command("init")
     .description("Initialize a new project")
-    .action(() => {
-        console.log(chalk.green("Initializing a new project..."));
-    });
+    .action(initCommand);
 
 // Add commands
 program

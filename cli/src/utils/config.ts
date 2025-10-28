@@ -39,9 +39,8 @@ export function readConfig(): CliConfig | null {
  */
 export function writeConfig(config: CliConfig): void {
     try {
-        const content = JSON.stringify(config, null);
+        const content = JSON.stringify(config, null, 4);
         writeFileSync(configPath, content, 'utf-8');
-        console.log('Config file written successfully.');
     } catch (error) {
         console.error('Error writing config:', error);
         process.exit(1);
