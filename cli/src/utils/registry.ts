@@ -17,7 +17,7 @@ const __dirname = dirname(__filename); // get directory name
  */
 export function getRegistry(): Registry {
     try {
-        const registryPath = join(__dirname, '../../../registry/registry.json');
+        const registryPath = join(__dirname, '../../registry/registry.json');
         
         const content = readFileSync(registryPath, 'utf-8');
         const registry: Registry = JSON.parse(content);

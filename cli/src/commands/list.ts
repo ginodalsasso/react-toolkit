@@ -30,7 +30,6 @@ export function listCommand(options?: { components?: boolean; utils?: boolean })
             const isLast = index === Object.entries(components).length - 1;
             const prefix = isLast ? '└─' : '├─';
 
-            console.log(chalk.bold.cyan(`Components (${Object.keys(components).length})`));
             console.log(`  ${prefix} ${chalk.green.bold.underline(item.name)} - ${item.description}`);
             console.log(`     ${chalk.gray(`Tags: ${item.tags.join(', ')}`)}`);
             console.log('');
@@ -44,7 +43,6 @@ export function listCommand(options?: { components?: boolean; utils?: boolean })
             const isLast = index === Object.entries(utils).length - 1;
             const prefix = isLast ? '└─' : '├─';
 
-            console.log(chalk.bold.cyan(`Utilities (${Object.keys(utils).length})`));
             console.log(`  ${prefix} ${chalk.green.bold.underline(item.name)} - ${item.description}`);
             console.log(`     ${chalk.gray(`Tags: ${item.tags.join(', ')}`)}`);
             console.log('');
