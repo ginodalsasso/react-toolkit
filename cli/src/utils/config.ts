@@ -8,6 +8,7 @@ import { CliConfig } from '../types';
  * ex: componentsPath, utilsPath, typescript, styling
  */
 
+/* Configuration file path */
 const __filename = ".my-cli.json";
 const configPath = join(process.cwd(), __filename);
 
