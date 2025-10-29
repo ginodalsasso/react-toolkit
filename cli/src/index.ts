@@ -42,7 +42,7 @@ program
 
 // Add commands
 program
-    .command("add")
+    .command("add [name]")
     .description("Add a new component")
     .action(addCommand);
 

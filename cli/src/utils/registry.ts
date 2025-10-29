@@ -17,7 +17,7 @@ const __dirname = dirname(__filename); // get directory name
  */
 export function getRegistry(): Registry {
     try {
-        const registryPath = join(__dirname, '../../../registry/registry.json');
+        const registryPath = join(__dirname, '../../registry/registry.json');
         
         const content = readFileSync(registryPath, 'utf-8');
         const registry: Registry = JSON.parse(content);
@@ -43,6 +43,7 @@ export function getAllItems(registry: Registry) {
  * Return a specific item by name from the registry
  */
 export function getItem(registry: Registry, name: string) {
+    console.log('Getting item:', name);
     return registry.components[name] 
         || registry.utils[name] 
         || null;

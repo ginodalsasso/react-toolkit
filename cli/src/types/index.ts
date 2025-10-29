@@ -27,3 +27,12 @@ export interface CliConfig {
     typescript: boolean;
     styling: 'css-modules' | 'tailwind' | 'css';
 }
+
+// Package.json structure
+export interface PackageJson {
+    name?: string;
+    version?: string;
+    dependencies?: Record<string, string>;
+    devDependencies?: Record<string, string>;
+    [key: string]: any;
+}
