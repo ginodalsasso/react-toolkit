@@ -2,6 +2,7 @@ import { Command } from "commander";
 import chalk from "chalk";
 import { listCommand } from "./commands/list";
 import { initCommand } from "./commands/init";
+import { addCommand } from "./commands/add";
 
 const program = new Command();
 
@@ -43,8 +44,6 @@ program
 program
     .command("add")
     .description("Add a new component")
-    .action(() => {
-        console.log(chalk.blue("Adding a new component..."));
-    });
+    .action(addCommand);
 
 program.parse(process.argv);
