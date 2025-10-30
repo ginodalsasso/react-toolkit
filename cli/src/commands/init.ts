@@ -63,8 +63,8 @@ export async function initCommand() {
             default: 'css-modules'
         }
     ]);
-
     writeConfig(answers);
+    
     console.log(chalk.green("Configuration file created successfully at ./my-cli.config.json"));
     console.log(chalk.gray("\nYou can now use:"));
     console.log(chalk.gray("my-cli add --component <ComponentName>"));

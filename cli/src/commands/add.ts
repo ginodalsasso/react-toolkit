@@ -57,7 +57,7 @@ export async function addCommand(name? : string) {
         console.log(chalk.green('\nAdding dependencies to package.json...'));
         await addDependencyToPackageJson(item.dependencies, item.devDependencies);
     } else {
-        console.log(chalk.yellow('No components or utilities found in the registry.'));
+        console.log(chalk.yellow('\nNo dependencies to add.'));
     }
 
     // Final success message
@@ -77,6 +77,13 @@ async function handleSelectedName(
         // If no name provided, list available components and utils
         console.log(chalk.green('Available components and utilities to add:'));
         const allItems = { ...registry.components, ...registry.utils };
+
+        const userEntries = Object.entries(allItems);
+        if (userEntries.length === 0) {
+            console.error(chalk.red('The registry is empty.'));
+            console.log(chalk.yellow('Add items to the registry: my-cli add <name>\n'));
+            process.exit(1);
+        }
         
         const choices = Object.entries(allItems).map(([key, item]) => ({
             name: `${item.name} (${item.type}) - ${item.description}`,
