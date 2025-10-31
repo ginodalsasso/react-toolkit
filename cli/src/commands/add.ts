@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import { configExists, readConfig } from "../utils/config";
+import { ensureConfig } from "../utils/config";
 import { getItem, getRegistry } from "../utils/registry";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
@@ -21,17 +21,7 @@ const __dirname = dirname(__filename);
 export async function addCommand(name? : string) {
     console.log(chalk.bold.blue('\n Add component or utility\n'));
 
-    if (!configExists()) {
-        console.error(chalk.red('No configuration found.'));
-        console.log(chalk.yellow('Please run: my-cli init\n'));
-        process.exit(1);
-    }
-
-    const config = readConfig();
-    if (!config) {
-        console.log(chalk.red('No config found, please run "my-cli init" first.'));
-        process.exit(1);
-    }
+    const config = ensureConfig();
 
     const registry = getRegistry();
     const selectedName = await handleSelectedName(name, registry);
@@ -56,8 +46,6 @@ export async function addCommand(name? : string) {
     if (item.dependencies.length > 0 || item.devDependencies.length > 0) {
         console.log(chalk.green('\nAdding dependencies to package.json...'));
         await addDependencyToPackageJson(item.dependencies, item.devDependencies);
-    } else {
-        console.log(chalk.yellow('\nNo dependencies to add.'));
     }
 
     // Final success message
@@ -123,8 +111,8 @@ async function copyRegistryFilesToProject(
             item.type + 's', // 'component' → 'components', 'util' → 'utils'
             selectedName as string, // 'button'
             file // 'Button.tsx'
-        );        
-        console.log('Source file path:', srcFilePath);
+        );      
+
         const destFilePath = join(process.cwd(), destPath, file); // ex: 'src/components/button/Button.tsx'
 
         const success = await copyFile(srcFilePath, destFilePath, { overwrite: false });

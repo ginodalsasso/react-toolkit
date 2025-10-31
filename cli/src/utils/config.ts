@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import { CliConfig } from '../types';
+import chalk from 'chalk';
 
 /**
  * This file contains utility functions to read and write the CLI configuration file (.my-cli.json)
@@ -46,4 +47,24 @@ export function writeConfig(config: CliConfig): void {
         console.error('Error writing config:', error);
         process.exit(1);
     }
+}
+
+/**
+ * Ensures config exists, exits with error message if not
+ */
+export function ensureConfig(): CliConfig {
+    if (!configExists()) {
+        console.error(chalk.red('No configuration found.'));
+        console.log(chalk.yellow('Please run: my-cli init\n'));
+        process.exit(1);
+    }
+    
+    const config = readConfig();
+    if (!config) {
+        console.error(chalk.red('Failed to read configuration file.'));
+        console.log(chalk.yellow('Please run: my-cli init\n'));
+        process.exit(1);
+    }
+    
+    return config;
 }
