@@ -7,6 +7,7 @@ import inquirer from "inquirer";
 import { copyFile, ensureDir } from "../utils/fileManager";
 import { addDependencyToPackageJson } from "../utils/dependencies";
 import { Registry, RegistryItem } from "../types";
+import { ensureItemName } from "../utils/prompt";
 
 /**
  * Get the current file name and directory name
@@ -22,9 +23,9 @@ export async function addCommand(name? : string) {
     console.log(chalk.bold.blue('\n Add component or utility\n'));
 
     const config = ensureConfig();
-
     const registry = getRegistry();
-    const selectedName = await handleSelectedName(name, registry);
+
+    const selectedName = await ensureItemName(name, registry, "add");
 
     const item = getItem(registry, selectedName as string);
     if (!item) {
@@ -53,9 +54,13 @@ export async function addCommand(name? : string) {
     console.log(chalk.gray(`Files installed in: ${destPath}\n`));
 }
 
-/*
- * Handle the selection of a component or utility by name
- */
+
+/**
+* Handle the selection of a component or utility by name
+* @param name Optional name of the component or utility to add
+* @param registry The registry of available components and utilities
+* @returns The selected name
+*/
 async function handleSelectedName(
     name: string | undefined, 
     registry: Registry
@@ -98,6 +103,9 @@ async function handleSelectedName(
 
 /**
  * copy files from the registry to the user's project
+ * @param selectedName The name of the selected component or utility
+ * @param item The registry item details
+ * @param destPath The destination path in the user's project
  */
 async function copyRegistryFilesToProject(
     selectedName: string, 

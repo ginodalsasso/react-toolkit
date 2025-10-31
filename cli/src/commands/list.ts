@@ -33,7 +33,10 @@ export function listCommand(options?: { components?: boolean; utils?: boolean })
  * @param components - The components to show
  * @param options - Command options to filter by components or utilities
  */
-function showComponents(components: Record<string, RegistryItem>, options?: { components?: boolean, utils?: boolean }) {
+function showComponents(
+    components: Record<string, RegistryItem>, 
+    options?: { components?: boolean, utils?: boolean }
+) {
     const showComponents = !options?.utils || options?.components;
 
     if (showComponents && Object.keys(components).length > 0) {
@@ -54,7 +57,10 @@ function showComponents(components: Record<string, RegistryItem>, options?: { co
  * @param utils - The utilities to show
  * @param options - Command options to filter by components or utilities
  */
-function showUtils(utils: Record<string, RegistryItem>, options?: { components?: boolean, utils?: boolean }) {
+function showUtils(
+    utils: Record<string, RegistryItem>, 
+    options?: { components?: boolean, utils?: boolean }
+) {
     const showUtils = !options?.components || options?.utils;
 
     if (showUtils && Object.keys(utils).length > 0) {
