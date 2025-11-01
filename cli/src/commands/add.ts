@@ -14,6 +14,7 @@ import { ensureItemName } from "../utils/prompt";
  */
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const __registryPath = join(__dirname, '../../registry');
 
 /**
  * Add command to add a component or utility from the registry to the project
@@ -66,10 +67,11 @@ async function copyRegistryFilesToProject(
     destPath: string,
 ) {
     try {
+        let success = false;
+        
         for (const file of item.files) {
             const srcFilePath = join(
-                __dirname,
-                '../../registry',
+                __registryPath,
                 item.type + 's', // 'component' → 'components', 'util' → 'utils'
                 selectedName as string, // 'button'
                 file // 'Button.tsx'
@@ -77,7 +79,7 @@ async function copyRegistryFilesToProject(
 
             const destFilePath = join(process.cwd(), destPath, file); // ex: 'src/components/button/Button.tsx'
 
-            const success = await copyFile(srcFilePath, destFilePath, { overwrite: false });
+            success = await copyFile(srcFilePath, destFilePath, { overwrite: false });
             if (success) {
                 console.log(chalk.green(`Created file: ${destFilePath}`));
             } else {

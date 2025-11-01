@@ -1,6 +1,6 @@
 import chalk from "chalk";
 import { ensureConfig } from "../utils/config";
-import { ensureItemName } from "../utils/prompt";
+import { confirmAction, ensureItemName } from "../utils/prompt";
 import { getItem, getRegistry } from "../utils/registry";
 import { fileExists } from "../utils/fileManager";
 import { join } from "path";
@@ -19,6 +19,12 @@ export async function removeCommand(name? : string) {
     if (!item) {
         console.error(chalk.red(`Item "${selectedName}" not found in the registry.`));
         process.exit(1);
+    }
+
+    const confirmed = await confirmAction(chalk.yellow(`Remove ${item.name} and all its files?`));
+    if (!confirmed) {
+        console.log(chalk.gray('Removal cancelled.'));
+        return;
     }
 
     const destPath = item.type === 'component' 
@@ -46,17 +52,12 @@ async function removeRegistryFilesFromProject(
             if (await fileExists(destFilePath)) {
                 await fsExtra.remove(destFilePath);
                 success = true;
-            } else {
-                success = false;
-            }
-
-            if (success) {
                 console.log(chalk.green(`Removed file: ${destFilePath}`));
             } else {
+                success = false;
                 console.log(chalk.yellow(`File not found, skipping: ${destFilePath}`));
             }
         }
-
         console.log(chalk.gray("Note: Dependencies were not removed from package.json"));
         console.log(chalk.gray("Run \"npm uninstall <package>\" manually if needed\n"));
     } catch (error) {

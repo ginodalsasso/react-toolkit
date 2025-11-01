@@ -57,3 +57,25 @@ export async function ensureItemName(
 
     return await promptItemSelection(registry, action);
 }
+
+/**
+ * Prompts the user for confirmation before proceeding with an action
+ * @param message The confirmation message to display
+ * @param defaultValue The default value for the confirmation (true/false)
+ * @returns True if the action is confirmed, false otherwise
+ */
+export async function confirmAction(
+    message: string,
+    defaultValue: boolean = false
+): Promise<boolean> {
+    const { confirmed } = await inquirer.prompt([
+        {
+            type: 'confirm',
+            name: 'confirmed',
+            message,
+            default: true,
+        },
+    ]);
+
+    return confirmed;
+}

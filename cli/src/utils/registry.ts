@@ -11,13 +11,14 @@ import type { Registry } from '../types/index.js';
 // get __dirname in ES module scope
 const __filename = fileURLToPath(import.meta.url); // convert URL to path
 const __dirname = dirname(__filename); // get directory name
+const __registryPath = join(__dirname, '../../registry');
 
 /**
  * read and parse registry.json
  */
 export function getRegistry(): Registry {
     try {
-        const registryPath = join(__dirname, '../../registry/registry.json');
+        const registryPath = join(__registryPath, 'registry.json');
         
         const content = readFileSync(registryPath, 'utf-8');
         const registry: Registry = JSON.parse(content);
