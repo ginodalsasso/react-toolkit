@@ -54,53 +54,6 @@ export async function addCommand(name? : string) {
     console.log(chalk.gray(`Files installed in: ${destPath}\n`));
 }
 
-
-/**
-* Handle the selection of a component or utility by name
-* @param name Optional name of the component or utility to add
-* @param registry The registry of available components and utilities
-* @returns The selected name
-*/
-async function handleSelectedName(
-    name: string | undefined, 
-    registry: Registry
-): Promise<string> {
-    let selectedName = name;
-    if (!selectedName) {
-        // If no name provided, list available components and utils
-        console.log(chalk.green('Available components and utilities to add:'));
-        const allItems = { ...registry.components, ...registry.utils };
-
-        const userEntries = Object.entries(allItems);
-        if (userEntries.length === 0) {
-            console.error(chalk.red('The registry is empty.'));
-            console.log(chalk.yellow('Add items to the registry: my-cli add <name>\n'));
-            process.exit(1);
-        }
-        
-        const choices = Object.entries(allItems).map(([key, item]) => ({
-            name: `${item.name} (${item.type}) - ${item.description}`,
-            value: key,
-        }));
-        
-        const { itemName } = await inquirer.prompt([
-            {
-                type: 'list',
-                name: 'itemName',
-                message: 'Select a component or utility to add:',
-                choices,
-            },
-        ]);
-
-        selectedName = itemName;
-    }
-    if (!selectedName) {
-        console.error(chalk.red('No item selected.'));
-        process.exit(1);
-    }
-    return selectedName;
-}
-
 /**
  * copy files from the registry to the user's project
  * @param selectedName The name of the selected component or utility
@@ -112,22 +65,27 @@ async function copyRegistryFilesToProject(
     item: RegistryItem,
     destPath: string,
 ) {
-    for (const file of item.files) {
-        const srcFilePath = join(
-            __dirname,
-            '../../registry',
-            item.type + 's', // 'component' → 'components', 'util' → 'utils'
-            selectedName as string, // 'button'
-            file // 'Button.tsx'
-        );      
+    try {
+        for (const file of item.files) {
+            const srcFilePath = join(
+                __dirname,
+                '../../registry',
+                item.type + 's', // 'component' → 'components', 'util' → 'utils'
+                selectedName as string, // 'button'
+                file // 'Button.tsx'
+            );      
 
-        const destFilePath = join(process.cwd(), destPath, file); // ex: 'src/components/button/Button.tsx'
+            const destFilePath = join(process.cwd(), destPath, file); // ex: 'src/components/button/Button.tsx'
 
-        const success = await copyFile(srcFilePath, destFilePath, { overwrite: false });
-        if (!success) {
-            console.log(chalk.yellow(`File already exists, skipped: ${destFilePath}`));
-        } else {
-            console.log(chalk.green(`Created file: ${destFilePath}`));
+            const success = await copyFile(srcFilePath, destFilePath, { overwrite: false });
+            if (success) {
+                console.log(chalk.green(`Created file: ${destFilePath}`));
+            } else {
+                console.log(chalk.gray(`Skipped (already exists): ${destFilePath}`));
+            }
         }
+    } catch (error) {
+        console.error(chalk.red(error));
+        process.exit(1);
     }
 }
