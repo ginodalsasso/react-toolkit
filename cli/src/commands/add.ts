@@ -67,8 +67,10 @@ async function copyRegistryFilesToProject(
     destPath: string,
 ) {
     try {
-        let success = false;
-        
+        // create a folder for the added item
+        const itemFolder = join(process.cwd(), destPath, selectedName);
+        await ensureDir(itemFolder);
+
         for (const file of item.files) {
             const srcFilePath = join(
                 __registryPath,
@@ -79,7 +81,7 @@ async function copyRegistryFilesToProject(
 
             const destFilePath = join(process.cwd(), destPath, file); // ex: 'src/components/button/Button.tsx'
 
-            success = await copyFile(srcFilePath, destFilePath, { overwrite: false });
+            const success = await copyFile(srcFilePath, destFilePath, { overwrite: false });
             if (success) {
                 console.log(chalk.green(`Created file: ${destFilePath}`));
             } else {

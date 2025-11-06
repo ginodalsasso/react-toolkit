@@ -45,7 +45,7 @@ async function removeRegistryFilesFromProject(
 ) {
     try {
         let success = false;
-
+        
         for (const file of item.files) {
             const destFilePath = join(process.cwd(), destPath, file);
 
