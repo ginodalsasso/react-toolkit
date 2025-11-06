@@ -3,8 +3,7 @@ import { ensureConfig } from "../utils/config";
 import { getItem, getRegistry } from "../utils/registry";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
-import inquirer from "inquirer";
-import { copyFile, ensureDir } from "../utils/fileManager";
+import { copyFile, ensureDir, fileExists } from "../utils/fileManager";
 import { addDependencyToPackageJson } from "../utils/dependencies";
 import { Registry, RegistryItem } from "../types";
 import { ensureItemName } from "../utils/prompt";
@@ -37,6 +36,12 @@ export async function addCommand(name? : string) {
     const destPath = item.type === 'component' 
     ? config.componentsPath 
     : config.utilsPath;
+
+    const itemFolder = join(process.cwd(), destPath, selectedName);
+    if (await fileExists(itemFolder)) {
+        console.log(chalk.yellow(`\n${item.type} "${selectedName}" already exists at ${itemFolder}. Skipping file creation.\n`));
+        process.exit(0);
+    }
 
     await ensureDir(join(process.cwd(), destPath));
     await copyRegistryFilesToProject(selectedName, item, destPath);
