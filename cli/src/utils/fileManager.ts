@@ -45,7 +45,12 @@ export async function copyFile(
  * @param dirPath 
  */
 export async function ensureDir(dirPath: string): Promise<void> {
-    await fsExtra.ensureDir(dirPath);
+    try {
+        await fsExtra.ensureDir(dirPath);
+    } catch (error) {
+        console.error(chalk.red(`Error creating directory: ${error}`));
+        throw error;
+    }
 }
 
 /**
@@ -54,5 +59,10 @@ export async function ensureDir(dirPath: string): Promise<void> {
  * @returns A promise that resolves to true if the file exists, false otherwise.
  */
 export async function fileExists(filePath: string): Promise<boolean> {
-    return fsExtra.pathExists(filePath);
+    try {
+        return await fsExtra.pathExists(filePath);
+    } catch (error) {
+        console.error(chalk.red(`Error checking file existence: ${error}`));
+        return false;
+    }
 }

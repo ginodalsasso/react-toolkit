@@ -6,7 +6,7 @@ import { dirname, join } from "path";
 import { copyFile, ensureDir, fileExists } from "../utils/fileManager";
 import { addDependencyToPackageJson } from "../utils/dependencies";
 import { Registry, RegistryItem } from "../types";
-import { ensureItemName } from "../utils/prompt";
+import { confirmAction, ensureItemName } from "../utils/prompt";
 
 /**
  * Get the current file name and directory name
@@ -84,11 +84,17 @@ async function copyRegistryFilesToProject(
                 file // 'Button.tsx'
             );      
 
+            const confirmed = await confirmAction(chalk.yellow(`Add file ${file} to project?`));
+            if (!confirmed) {
+                console.log(chalk.gray(`Skipped file: ${file}`));
+                return;
+            }
+
             const destFilePath = join(process.cwd(), destPath, file); // ex: 'src/components/button/Button.tsx'
 
             const success = await copyFile(srcFilePath, destFilePath, { overwrite: false });
             if (success) {
-                console.log(chalk.green(`Created file: ${destFilePath}`));
+                console.log(chalk.green(`Created file: ${destFilePath}`));  
             } else {
                 console.log(chalk.gray(`Skipped (already exists): ${destFilePath}`));
             }
