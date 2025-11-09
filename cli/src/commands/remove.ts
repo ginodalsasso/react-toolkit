@@ -13,12 +13,7 @@ export async function removeCommand(name? : string) {
     const registry = getRegistry();
 
     const selectedName = await ensureItemName(name, registry, "remove");
-
     const item = getItem(registry, selectedName as string);
-    if (!item) {
-        console.error(chalk.red(`Item "${selectedName}" not found in the registry.`));
-        process.exit(1);
-    }
 
     const confirmed = await confirmAction(chalk.yellow(`Remove ${item.name} and all its files?`));
     if (!confirmed) {

@@ -2,12 +2,13 @@ import chalk from "chalk";
 import { ensureConfig } from "../utils/config";
 import { getItem, getRegistry } from "../utils/registry";
 import { fileURLToPath } from "url";
-import { dirname, join } from "path";
+import { dirname, join, resolve } from "path";
 import { copyDirectory } from "../utils/fileManager";
 import { addDependencyToPackageJson } from "../utils/dependencies";
 import { RegistryItem } from "../types";
 import { confirmAction, ensureItemName } from "../utils/prompt";
 import fsExtra from "fs-extra/esm";
+import { sanitizePath } from "../utils/validators";
 
 /**
  * Get the current file name and directory name
@@ -29,10 +30,6 @@ export async function addCommand(name? : string) {
     const selectedName = await ensureItemName(name, registry, "add");
 
     const item = getItem(registry, selectedName as string);
-    if (!item) {
-        console.error(chalk.red(`Item "${selectedName}" not found in the registry.`));
-        process.exit(1);
-    }
 
     const destPath = item.type === 'component' 
     ? config.componentsPath 
@@ -65,7 +62,7 @@ async function copyRegistryFilesToProject(
     item: RegistryItem,
     destPath: string,
 ) {
-    try {
+    try {        
         // source: registry/components/button
         const srcDirectory = join(
             __registryPath,
@@ -73,11 +70,16 @@ async function copyRegistryFilesToProject(
             selectedName
         );      
         // destination: project/src/components/button
-        const destDirectory = join(
+        const destDirectory = resolve(
             process.cwd(), 
             destPath, 
             selectedName
         );
+
+        const projectRoot = resolve(process.cwd(), destPath);
+        if (!destDirectory.startsWith(projectRoot)) {
+            throw new Error("Destination path is outside the project directory.");
+        }
 
         if (await fsExtra.pathExists(destDirectory)) {
             console.log(chalk.yellow(`\nThe item "${selectedName}" already exists at ${destDirectory}. Skipping copy.`));
