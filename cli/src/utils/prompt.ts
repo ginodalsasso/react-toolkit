@@ -73,7 +73,7 @@ export async function confirmAction(
             type: 'confirm',
             name: 'confirmed',
             message,
-            default: true,
+            default: defaultValue,
         },
     ]);
 

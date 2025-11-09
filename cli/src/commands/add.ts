@@ -3,10 +3,11 @@ import { ensureConfig } from "../utils/config";
 import { getItem, getRegistry } from "../utils/registry";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
-import { copyFile, ensureDir, fileExists } from "../utils/fileManager";
+import { copyDirectory } from "../utils/fileManager";
 import { addDependencyToPackageJson } from "../utils/dependencies";
-import { Registry, RegistryItem } from "../types";
+import { RegistryItem } from "../types";
 import { confirmAction, ensureItemName } from "../utils/prompt";
+import fsExtra from "fs-extra/esm";
 
 /**
  * Get the current file name and directory name
@@ -37,13 +38,6 @@ export async function addCommand(name? : string) {
     ? config.componentsPath 
     : config.utilsPath;
 
-    const itemFolder = join(process.cwd(), destPath, selectedName);
-    if (await fileExists(itemFolder)) {
-        console.log(chalk.yellow(`\n${item.type} "${selectedName}" already exists at ${itemFolder}. Skipping file creation.\n`));
-        process.exit(0);
-    }
-
-    await ensureDir(join(process.cwd(), destPath));
     await copyRegistryFilesToProject(selectedName, item, destPath);
 
     console.log(chalk.green(`\nSelected item: ${item.name} (${item.type})`));
@@ -72,32 +66,36 @@ async function copyRegistryFilesToProject(
     destPath: string,
 ) {
     try {
-        // create a folder for the added item
-        const itemFolder = join(process.cwd(), destPath, selectedName);
-        await ensureDir(itemFolder);
+        // source: registry/components/button
+        const srcDirectory = join(
+            __registryPath,
+            item.type + 's', 
+            selectedName
+        );      
+        // destination: project/src/components/button
+        const destDirectory = join(
+            process.cwd(), 
+            destPath, 
+            selectedName
+        );
 
-        for (const file of item.files) {
-            const srcFilePath = join(
-                __registryPath,
-                item.type + 's', // 'component' → 'components', 'util' → 'utils'
-                selectedName as string, // 'button'
-                file // 'Button.tsx'
-            );      
+        if (await fsExtra.pathExists(destDirectory)) {
+            console.log(chalk.yellow(`\nThe item "${selectedName}" already exists at ${destDirectory}. Skipping copy.`));
+            return;
+        }
 
-            const confirmed = await confirmAction(chalk.yellow(`Add file ${file} to project?`));
-            if (!confirmed) {
-                console.log(chalk.gray(`Skipped file: ${file}`));
-                return;
-            }
+        const confirmed = await confirmAction(chalk.yellow(`Add file ${destDirectory } to project?`));
+        if (!confirmed) {
+            console.log(chalk.gray(`Skipped file: ${destDirectory }`));
+            return;
+        }
 
-            const destFilePath = join(process.cwd(), destPath, file); // ex: 'src/components/button/Button.tsx'
-
-            const success = await copyFile(srcFilePath, destFilePath, { overwrite: false });
-            if (success) {
-                console.log(chalk.green(`Created file: ${destFilePath}`));  
-            } else {
-                console.log(chalk.gray(`Skipped (already exists): ${destFilePath}`));
-            }
+        const success = await copyDirectory(srcDirectory, destDirectory, { overwrite: false });
+        if (success) {
+            console.log(chalk.green(`Created file: ${destDirectory}`));
+            console.log(chalk.gray(`Files copied: ${item.files.join(', ')}`));
+        } else {
+            console.log(chalk.gray(`Skipped (already exists): ${destDirectory}`));
         }
     } catch (error) {
         console.error(chalk.red(error));
