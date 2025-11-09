@@ -2,7 +2,6 @@ import chalk from "chalk";
 import { ensureConfig } from "../utils/config";
 import { confirmAction, ensureItemName } from "../utils/prompt";
 import { getItem, getRegistry } from "../utils/registry";
-import { fileExists } from "../utils/fileManager";
 import { join } from "path";
 import fsExtra from "fs-extra/esm";
 import { RegistryItem } from "../types";
@@ -49,7 +48,7 @@ async function removeRegistryFilesFromProject(
         for (const file of item.files) {
             const destFilePath = join(process.cwd(), destPath, file);
 
-            if (await fileExists(destFilePath)) {
+            if (await fsExtra.pathExists(destFilePath)) {
                 await fsExtra.remove(destFilePath);
                 success = true;
                 console.log(chalk.green(`Removed file: ${destFilePath}`));
