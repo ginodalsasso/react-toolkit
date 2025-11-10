@@ -1,7 +1,7 @@
 import chalk from "chalk";
 import { ensureConfig } from "../utils/config";
 import { confirmAction, ensureItemName } from "../utils/prompt";
-import { getItem, getRegistry } from "../utils/registry";
+import { getItem, getItemDestPath, getRegistry } from "../utils/registry";
 import { join } from "path";
 import fsExtra from "fs-extra/esm";
 import { RegistryItem } from "../types";
@@ -13,7 +13,7 @@ export async function removeCommand(name? : string) {
     const registry = getRegistry();
 
     const selectedName = await ensureItemName(name, registry, "remove");
-    const item = getItem(registry, selectedName as string);
+    const item = getItem(registry, selectedName);
 
     const confirmed = await confirmAction(chalk.yellow(`Remove ${item.name} and all its files?`));
     if (!confirmed) {
@@ -21,9 +21,7 @@ export async function removeCommand(name? : string) {
         return;
     }
 
-    const destPath = item.type === 'component' 
-    ? config.componentsPath 
-    : config.utilsPath;
+    const destPath = getItemDestPath(item, config);
 
     await removeRegistryFilesFromProject(destPath, item);
 }

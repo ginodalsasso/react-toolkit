@@ -1,6 +1,6 @@
 import chalk from "chalk";
 import { ensureConfig } from "../utils/config";
-import { getItem, getRegistry } from "../utils/registry";
+import { getItem, getItemDestPath, getRegistry } from "../utils/registry";
 import { fileURLToPath } from "url";
 import { dirname, join, resolve } from "path";
 import { copyDirectory } from "../utils/fileManager";
@@ -8,7 +8,6 @@ import { addDependencyToPackageJson } from "../utils/dependencies";
 import { RegistryItem } from "../types";
 import { confirmAction, ensureItemName } from "../utils/prompt";
 import fsExtra from "fs-extra/esm";
-import { sanitizePath } from "../utils/validators";
 
 /**
  * Get the current file name and directory name
@@ -29,11 +28,9 @@ export async function addCommand(name? : string) {
 
     const selectedName = await ensureItemName(name, registry, "add");
 
-    const item = getItem(registry, selectedName as string);
+    const item = getItem(registry, selectedName);
 
-    const destPath = item.type === 'component' 
-    ? config.componentsPath 
-    : config.utilsPath;
+    const destPath = getItemDestPath(item, config);
 
     await copyRegistryFilesToProject(selectedName, item, destPath);
 

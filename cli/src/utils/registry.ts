@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import type { Registry } from '../types/index.js';
+import type { CliConfig, Registry, RegistryItem } from '../types/index.js';
 
 /**
  * This file contains utility functions to read and interact with the registry.json file in the registry folder,
@@ -49,3 +49,16 @@ export function getItem(registry: Registry, name: string) {
         || registry.utils[name] 
         || null;
 };
+
+/**
+ * 
+ * Get the destination path for a registry item based on its type
+ * @param item The registry item 
+ * @param config The CLI configuration
+ * @returns The destination path for the item
+ */
+export function getItemDestPath(item: RegistryItem, config: CliConfig): string {
+    return item.type === 'component' 
+        ? config.componentsPath 
+        : config.utilsPath;
+}

@@ -1,7 +1,8 @@
 import chalk from "chalk";
 import inquirer from "inquirer";
 import { Registry } from "../types";
-import { registryHasKey, sanitizePath, validateName, validateNotEmpty } from "./validators";
+import { sanitizePath, validateName, validateNotEmpty } from "./validators";
+import { getItem } from "./registry";
 
 /**
  * Prompts the user to select an item from the registry
@@ -53,21 +54,15 @@ export async function ensureItemName(
     action: string = "select"
 ): Promise<string> {
     if (name) {
-        const notEmpty = validateNotEmpty(name);
-        if (notEmpty !== true) {
-            console.error(chalk.red(notEmpty as string));
-            process.exit(1);
-        }
-
-        const sanitizedName = validateName(name);
-        if (sanitizedName !== true) {
-            console.error(chalk.red(sanitizedName as string));
-            process.exit(1);
-        }
+        validateNotEmpty(name);
+        validateName(name);
 
         const safeName = sanitizePath(name);
-        if (!registryHasKey(registry, safeName)) {
-            console.error(chalk.red(`Item "${safeName}" not found in the registry.`));
+
+        // Check if item exists in registry
+        const item = getItem(registry, safeName);
+        if (!item) {
+            console.error(chalk.red(`Item "${safeName}" not found in registry.`));
             process.exit(1);
         }
 
