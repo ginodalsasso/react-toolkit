@@ -2,7 +2,7 @@ import chalk from "chalk";
 import { ensureConfig } from "../utils/config";
 import { confirmAction, ensureItemName } from "../utils/prompt";
 import { getItem, getItemDestPath, getRegistry } from "../utils/registry";
-import { join } from "path";
+import { join, resolve } from "path";
 import fsExtra from "fs-extra/esm";
 import { RegistryItem } from "../types";
 
@@ -23,33 +23,37 @@ export async function removeCommand(name? : string) {
 
     const destPath = getItemDestPath(item, config);
 
-    await removeRegistryFilesFromProject(destPath, item);
+    await removeRegistryFilesFromProject(selectedName, item, destPath);
 }
 
 /**
  * Remove files associated with a registry item from the project.
- * @param destPath The destination path where the item files are located.
+ * @param selectedName The name of the selected component or utility.
  * @param item The registry item to remove.
+ * @param destPath The destination path where the item files are located.
  */
 async function removeRegistryFilesFromProject(
+    selectedName: string,
+    item: RegistryItem,
     destPath: string,
-    item: RegistryItem
 ) {
     try {
-        let success = false;
-        
-        for (const file of item.files) {
-            const destFilePath = join(process.cwd(), destPath, file);
+        const projectRoot = resolve(process.cwd(), destPath);
+        const destDirectory = resolve(projectRoot, selectedName);
 
-            if (await fsExtra.pathExists(destFilePath)) {
-                await fsExtra.remove(destFilePath);
-                success = true;
-                console.log(chalk.green(`Removed file: ${destFilePath}`));
-            } else {
-                success = false;
-                console.log(chalk.yellow(`File not found, skipping: ${destFilePath}`));
-            }
+        if (!destDirectory.startsWith(projectRoot)) {
+            throw new Error("Destination path is outside the project directory.");
         }
+
+        if (!await fsExtra.pathExists(destDirectory)) {
+            console.log(chalk.yellow(`No files found for ${item.name} at ${destDirectory}. Nothing to remove.`));
+            return;
+        }
+        
+        await fsExtra.remove(destDirectory);
+
+        console.log(chalk.green.bold(`\n ${item.name} was successfully removed! in \n${destDirectory}\n`));
+
         console.log(chalk.gray("Note: Dependencies were not removed from package.json"));
         console.log(chalk.gray("Run \"npm uninstall <package>\" manually if needed\n"));
     } catch (error) {

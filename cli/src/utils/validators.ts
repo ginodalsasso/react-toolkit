@@ -11,19 +11,17 @@ export function registryHasKey(registry: Registry, key: string): boolean {
     );
 }
 
-export function validateNotEmpty(input: string): boolean | string {
-    if (!input || input.trim() === "") {
-        return "This field cannot be empty";
+export function validateNotEmpty(input: string): void {
+    if (!input?.trim()) {
+        throw new Error("This field cannot be empty");
     }
-    return true;
 }
 
-export function validateName(input: string): boolean | string {
+export function validateName(input: string): void {
     const nameRegex = /^[a-zA-Z0-9-_]+$/;
     if (!nameRegex.test(input)) {
-        return 'Name can only contain letters, numbers, hyphens, and underscores.';
+        throw new Error('Name can only contain letters, numbers, hyphens, and underscores.');
     }
-    return true;
 }
 
 /**

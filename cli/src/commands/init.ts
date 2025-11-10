@@ -36,14 +36,12 @@ export async function initCommand() {
             name: "componentsPath",
             message: 'Where should components be installed?',
             default: 'src/components',
-            validate: validateNotEmpty,
         },
         {
             type: "input",
             name: "utilsPath",
             message: 'Where should utilities be installed?',
             default: 'src/utils',
-            validate: validateNotEmpty,
         },
         {
             type: "confirm",
