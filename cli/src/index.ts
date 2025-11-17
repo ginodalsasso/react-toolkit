@@ -4,6 +4,7 @@ import { listCommand } from "./commands/list";
 import { initCommand } from "./commands/init";
 import { addCommand } from "./commands/add";
 import { removeCommand } from "./commands/remove";
+import { diffCommand } from "./commands/diff";
 
 const program = new Command();
 
@@ -56,5 +57,15 @@ program
     .command("remove [name]")
     .description("Remove an existing component or utility")
     .action(removeCommand);
+
+// Diff commands
+program
+    .command("diff [name]")
+    .description("Compare installed components/utils with registry versions")
+    .option("-d, --detailled", "Show detailed differences")
+    .action((name, options) => {
+        diffCommand(name, options);
+    });
+
 
 program.parse(process.argv);
