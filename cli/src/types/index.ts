@@ -36,3 +36,19 @@ export interface PackageJson {
     devDependencies?: Record<string, string>;
     [key: string]: any;
 }
+
+// Represents the diff result for a single file
+export interface FileDiff {
+    filePath: string;
+    status: "identical" | "modified" | "missing-in-local" | "missing-in-registry";
+    localPath?: string;
+    registryPath?: string;
+}
+
+// Represents the diff result for a component or utility
+export interface ItemDiff {
+    name: string;
+    type: "component" | "utility";
+    status: "not-installed" | "up-to-date" | "modified";
+    files: FileDiff[];
+}
