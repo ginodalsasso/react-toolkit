@@ -40,7 +40,7 @@ export interface PackageJson {
 // Represents the diff result for a single file
 export interface FileDiff {
     filePath: string;
-    status: "identical" | "modified" | "missing-in-local" | "missing-in-registry";
+    status: "identical" | "modified" | "missing-in-local" | "missing-in-registry" | "missing";
     localPath?: string;
     registryPath?: string;
 }
