@@ -48,7 +48,7 @@ export interface FileDiff {
 // Represents the diff result for a component or utility
 export interface ItemDiff {
     name: string;
-    type: "component" | "utility";
+    type: "component" | "util";
     status: "not-installed" | "up-to-date" | "modified";
     files: FileDiff[];
 }
