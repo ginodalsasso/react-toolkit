@@ -5,6 +5,7 @@ import { ensureItemName } from "../utils/prompt";
 import { getAllItems, getItem, getRegistry } from "../utils/registry";
 import { dirname, join } from "path";
 import chalk from "chalk";
+import { CliConfig, Registry } from "../types";
 
 /**
  * Get the current file name and directory name
@@ -29,50 +30,64 @@ export async function diffCommand(
 
     try {
         if (name) {
-            const itemName = await ensureItemName(name, registry, "check");
-            const item = getItem(registry, itemName);
-
-            const diff = await compareItem(itemName, item, config, __registryPath);
-            displayDiff(diff, detailled);
+            await diffSingleItem(name, config, registry, detailled);
         } else {
-            const allItems = getAllItems(registry);
-            let totalChecked = 0;
-            let upToDate = 0;
-            let modified = 0;
-            let notInstalled = 0;
-
-            // Iterate over all items in the registry in order to compare them
-            for (const [itemName, item] of Object.entries(allItems)) {
-                const diff = await compareItem(
-                    itemName,
-                    item,
-                    config,
-                    __registryPath
-                );
-                displayDiff(diff, detailled);
-                // Update summary counts
-                totalChecked++;
-                // Increment the appropriate count based on the diff status
-                switch (diff.status) {
-                    case "up-to-date":
-                        upToDate++;
-                        break;
-                    case "modified":
-                        modified++;
-                        break;
-                    case "not-installed":
-                        notInstalled++;
-                        break;
-                }
-                console.log(chalk.cyan(`\n Summary:`));
-                console.log(chalk.gray(`Total checked: ${totalChecked}`));
-                console.log(chalk.green(`Up to date: ${upToDate}`));
-                console.log(chalk.yellow(`Modified: ${modified}`));
-                console.log(chalk.red(`Not installed: ${notInstalled}`));
-            }
+            await diffAllItems(config, registry, detailled);
         }
     } catch (error) {
         console.error(chalk.red(error));
         process.exit(1);
     }
+}
+
+async function diffSingleItem(
+    itemName: string,
+    config: CliConfig,
+    registry: Registry,
+    detailled: boolean
+) {
+    ensureItemName(itemName, registry, "check");
+    const item = getItem(registry, itemName);
+
+    const diff = await compareItem(itemName, item, config, __registryPath);
+    displayDiff(diff, detailled);
+}
+
+
+async function diffAllItems(
+    config: CliConfig,
+    registry: Registry,
+    detailled: boolean
+) {
+    const allItems = getAllItems(registry);
+    let totalChecked = 0;
+    let upToDate = 0;
+    let modified = 0;
+    let notInstalled = 0;
+
+    // Iterate over all items in the registry in order to compare them
+    for (const [itemName, item] of Object.entries(allItems)) {
+        const diff = await compareItem(itemName, item, config, __registryPath);
+        displayDiff(diff, detailled);
+        // Update summary counts
+        totalChecked++;
+        // Increment the appropriate count based on the diff status
+        switch (diff.status) {
+            case "up-to-date":
+                upToDate++;
+                break;
+            case "modified":
+                modified++;
+                break;
+            case "not-installed":
+                notInstalled++;
+                break;
+        }
+    }
+    // // Display summary
+    console.log(chalk.yellow("\nSummary:"));
+    console.log(chalk.yellow(`Total items checked: ${totalChecked}`));
+    console.log(chalk.green(`Up-to-date: ${upToDate}`));
+    console.log(chalk.red(`Modified: ${modified}`));
+    console.log(chalk.red(`Not installed: ${notInstalled}`));
 }

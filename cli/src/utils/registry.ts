@@ -44,7 +44,6 @@ export function getAllItems(registry: Registry) {
  * Return a specific item by name from the registry
  */
 export function getItem(registry: Registry, name: string) {
-    console.log('Getting item:', name);
     return registry.components[name] 
         || registry.utils[name] 
         || null;
