@@ -153,9 +153,10 @@ export function displayDiff (diff: ItemDiff, detailed: boolean = false) {
     };
     const color = statusColors[diff.status];
     const typeLabel = diff.type === "component" ? "Component" : "Util";
-
+    // Example output: "MODIFIED - Component: Button"
     console.log(`${color(diff.status.toUpperCase())} - ${typeLabel}: ${diff.name}`);
 
+    // Detailed file diffs
     if (detailed && diff.files.length > 0) {
         diff.files.forEach(file => {
             const fileStatusColors = {
@@ -165,6 +166,7 @@ export function displayDiff (diff: ItemDiff, detailed: boolean = false) {
                 "missing-in-registry": chalk.red,
                 "missing": chalk.red,
             };
+            // Example output: "MODIFIED - src/Button.tsx"
             console.log(`${fileStatusColors[file.status](file.status.toUpperCase())} - ${file.filePath}`);
         });
     }

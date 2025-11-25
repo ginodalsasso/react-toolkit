@@ -2,7 +2,7 @@ import chalk from "chalk";
 import { ensureConfig } from "../utils/config";
 import { confirmAction, ensureItemName } from "../utils/prompt";
 import { getItem, getItemDestPath, getRegistry } from "../utils/registry";
-import { join, resolve } from "path";
+import { resolve } from "path";
 import fsExtra from "fs-extra/esm";
 import { RegistryItem } from "../types";
 
