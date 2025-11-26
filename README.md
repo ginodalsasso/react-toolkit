@@ -4,22 +4,6 @@ A command-line interface tool for managing reusable React components and utiliti
 
 ---
 
-## Table of Contents
-
-- [Features](#-features)
-- [Installation](#-installation)
-- [Usage](#-usage)
-- [Project Structure](#-project-structure)
-- [Available Registry Items](#-available-registry-items)
-- [Adding New Items](#-adding-new-items-to-the-registry)
-- [Configuration](#-configuration-file-my-clijson)
-- [Technologies](#-technologies-used)
-- [Development](#-development)
-- [Roadmap](#-roadmap)
-- [Author](#-author)
-
----
-
 ## Features
 
 - **Component Management** - Add pre-configured React components to your project
@@ -27,6 +11,7 @@ A command-line interface tool for managing reusable React components and utiliti
 - **Smart Dependencies** - Automatically adds required dependencies to package.json
 - **Configuration System** - Customizable paths and styling preferences
 - **Registry Browser** - List and explore available components and utils
+- **Diff comparison** - Compare your local code with the version from the registry.
 - **Clean Removal** - Remove components and their associated files
 - **Type-Safe** - Built with TypeScript for better developer experience
 

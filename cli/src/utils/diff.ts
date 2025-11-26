@@ -1,7 +1,7 @@
 import fsExtra from "fs-extra/esm";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { CliConfig, FileDiff, ItemDiff, RegistryItem } from "../types";
+import { CliConfig, FileDiff, FolderType, ItemDiff, ItemType, RegistryItem, StatusFileOptions, StatusItemsOptions } from "../types";
 import chalk from "chalk";
 
 /**
@@ -51,7 +51,7 @@ async function getFileDiffStatus(
     if (!localExists && registryExists) {
         return {
             filePath: fileName,
-            status: "missing-in-local",
+            status: StatusFileOptions.MISSING_IN_LOCAL,
             registryPath,
         };
     }
@@ -59,7 +59,7 @@ async function getFileDiffStatus(
     if (localExists && !registryExists) {
         return {
             filePath: fileName,
-            status: "missing-in-registry",
+            status: StatusFileOptions.MISSING_IN_REGISTRY,
             localPath,
         };
     }
@@ -67,7 +67,7 @@ async function getFileDiffStatus(
     if (!localExists && !registryExists) {
         return {
             filePath: fileName,
-            status: "missing",
+            status: StatusFileOptions.MISSING,
         };
     }
 
@@ -75,7 +75,7 @@ async function getFileDiffStatus(
 
     return {
         filePath: fileName,
-        status: areIdentical ? "identical" : "modified", // Updated line
+        status: areIdentical ? StatusFileOptions.IDENTICAL : StatusFileOptions.MODIFIED,
         localPath,
         registryPath,
     };
@@ -96,14 +96,14 @@ export async function compareItem(
     registryBasePath: string
 ): Promise<ItemDiff> {
     // if item type is component, use componentsPath, else use utilsPath
-    const localBasePath = item.type === "component"
+    const localBasePath = item.type === ItemType.COMPONENT
         ? config.componentsPath
         : config.utilsPath;
 
     const localDir = join(process.cwd(), localBasePath, itemName);
     const registryDir = join(
         registryBasePath,
-        item.type === "component" ? "components" : "utils",
+        item.type === ItemType.COMPONENT ? FolderType.COMPONENTS : FolderType.UTILS,
         itemName
     );
 
@@ -113,7 +113,7 @@ export async function compareItem(
         return {
             name: itemName,
             type: item.type,
-            status: "not-installed",
+            status: StatusItemsOptions.NOT_INSTALLED,
             files: [],
         };
     }
@@ -126,12 +126,12 @@ export async function compareItem(
     );
 
     // Determine overall item status
-    const hasModified = fileDiffs.some(file => file.status === "modified");
+    const hasModified = fileDiffs.some(file => file.status === StatusFileOptions.MODIFIED);
     const hasMissing = fileDiffs.some(file => 
-        file.status === "missing-in-local" || file.status === "missing-in-registry" || file.status === "missing"
+        file.status === StatusFileOptions.MISSING_IN_LOCAL || file.status === StatusFileOptions.MISSING_IN_REGISTRY || file.status === StatusFileOptions.MISSING
     );
 
-    const itemStatus = hasModified || hasMissing ? "modified" : "up-to-date";
+    const itemStatus = hasModified || hasMissing ? StatusItemsOptions.MODIFIED : StatusItemsOptions.UP_TO_DATE;
 
     return {
         name: itemName,
@@ -147,9 +147,9 @@ export async function compareItem(
  */
 export function displayDiff (diff: ItemDiff, detailed: boolean = false) {
     const statusColors = {
-        "not-installed": chalk.red,
-        "up-to-date": chalk.green,
-        "modified": chalk.yellow,
+        [StatusItemsOptions.NOT_INSTALLED]: chalk.red,
+        [StatusItemsOptions.UP_TO_DATE]: chalk.green,
+        [StatusItemsOptions.MODIFIED]: chalk.yellow,
     };
     const color = statusColors[diff.status];
     const typeLabel = diff.type === "component" ? "Component" : "Util";
@@ -160,11 +160,11 @@ export function displayDiff (diff: ItemDiff, detailed: boolean = false) {
     if (detailed && diff.files.length > 0) {
         diff.files.forEach(file => {
             const fileStatusColors = {
-                "identical": chalk.green,
-                "modified": chalk.yellow,
-                "missing-in-local": chalk.red,
-                "missing-in-registry": chalk.red,
-                "missing": chalk.red,
+                [StatusFileOptions.IDENTICAL]: chalk.green,
+                [StatusFileOptions.MODIFIED]: chalk.yellow,
+                [StatusFileOptions.MISSING_IN_LOCAL]: chalk.red,
+                [StatusFileOptions.MISSING_IN_REGISTRY]: chalk.red,
+                [StatusFileOptions.MISSING]: chalk.red,
             };
             // Example output: "MODIFIED - src/Button.tsx"
             console.log(`${fileStatusColors[file.status](file.status.toUpperCase())} - ${file.filePath}`);

@@ -5,7 +5,7 @@ import { ensureItemName } from "../utils/prompt";
 import { getAllItems, getItem, getRegistry } from "../utils/registry";
 import { dirname, join } from "path";
 import chalk from "chalk";
-import { CliConfig, Registry } from "../types";
+import { CliConfig, Registry, StatusItemsOptions } from "../types";
 
 /**
  * Get the current file name and directory name
@@ -73,13 +73,13 @@ async function diffAllItems(
         totalChecked++;
         // Increment the appropriate count based on the diff status
         switch (diff.status) {
-            case "up-to-date":
+            case StatusItemsOptions.UP_TO_DATE:
                 upToDate++;
                 break;
-            case "modified":
+            case StatusItemsOptions.MODIFIED:
                 modified++;
                 break;
-            case "not-installed":
+            case StatusItemsOptions.NOT_INSTALLED:
                 notInstalled++;
                 break;
         }

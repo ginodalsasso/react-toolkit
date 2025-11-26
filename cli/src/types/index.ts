@@ -1,6 +1,36 @@
+export enum FolderType {
+    COMPONENTS = "components",
+    UTILS = "utils",
+}
+
+export enum ItemType {
+    COMPONENT = "component",
+    UTIL = "util",
+}
+
+export enum StylingOptions {
+    CSS_MODULES = "css-modules",
+    TAILWIND = "tailwind",
+    CSS = "css",
+}
+
+export enum StatusFileOptions {
+    IDENTICAL = "identical",
+    MODIFIED = "modified",
+    MISSING_IN_LOCAL = "missing-in-local",
+    MISSING_IN_REGISTRY = "missing-in-registry",
+    MISSING = "missing",
+}
+
+export enum StatusItemsOptions {
+    NOT_INSTALLED = "not-installed",
+    UP_TO_DATE = "up-to-date",
+    MODIFIED = "modified",
+}
+
 export interface RegistryItem {
     name: string;
-    type: 'component' | 'util';
+    type: ItemType;
     description: string;
     files: string[];
     dependencies: string[];
@@ -25,7 +55,7 @@ export interface CliConfig {
     componentsPath: string;
     utilsPath: string;
     typescript: boolean;
-    styling: 'css-modules' | 'tailwind' | 'css';
+    styling: StylingOptions;
 }
 
 // Package.json structure
@@ -40,7 +70,7 @@ export interface PackageJson {
 // Represents the diff result for a single file
 export interface FileDiff {
     filePath: string;
-    status: "identical" | "modified" | "missing-in-local" | "missing-in-registry" | "missing";
+    status: StatusFileOptions;
     localPath?: string;
     registryPath?: string;
 }
@@ -48,7 +78,7 @@ export interface FileDiff {
 // Represents the diff result for a component or utility
 export interface ItemDiff {
     name: string;
-    type: "component" | "util";
-    status: "not-installed" | "up-to-date" | "modified";
+    type: ItemType;
+    status: StatusItemsOptions;
     files: FileDiff[];
 }
