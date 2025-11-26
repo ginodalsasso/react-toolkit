@@ -1,6 +1,6 @@
 import chalk from "chalk";
 import fsExtra from "fs-extra";
-import { PackageJson } from "../types";
+import { PackageJson } from "../types/types";
 import { join } from "path";
 
 /**

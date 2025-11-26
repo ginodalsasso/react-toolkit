@@ -37,11 +37,10 @@ export interface RegistryItem {
     devDependencies: string[];
     registryDependencies: string[];
     tags: string[];
-    examples?: 
-        Array<{
-            name: string;
-            code: string;
-        }>;
+    examples?: Array<{
+        name: string;
+        code: string;
+    }>;
 }
 
 // Registry structure
@@ -68,7 +67,7 @@ export interface PackageJson {
 }
 
 // Represents the diff result for a single file
-export interface FileDiff {
+export interface FileStatus {
     filePath: string;
     status: StatusFileOptions;
     localPath?: string;
@@ -76,9 +75,9 @@ export interface FileDiff {
 }
 
 // Represents the diff result for a component or utility
-export interface ItemDiff {
+export interface ItemStatus {
     name: string;
     type: ItemType;
     status: StatusItemsOptions;
-    files: FileDiff[];
+    files: FileStatus[];
 }

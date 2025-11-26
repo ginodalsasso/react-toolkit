@@ -1,6 +1,6 @@
 import chalk from "chalk";
 import inquirer from "inquirer";
-import { Registry } from "../types";
+import { Registry } from "../types/types";
 import { sanitizePath, validateName, validateNotEmpty } from "./validators";
 import { getItem } from "./registry";
 

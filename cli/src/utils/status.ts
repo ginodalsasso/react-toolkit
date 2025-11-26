@@ -1,7 +1,7 @@
 import fsExtra from "fs-extra/esm";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { CliConfig, FileDiff, FolderType, ItemDiff, ItemType, RegistryItem, StatusFileOptions, StatusItemsOptions } from "../types";
+import { CliConfig, FileStatus, FolderType, ItemStatus, ItemType, RegistryItem, StatusFileOptions, StatusItemsOptions } from "../types/types";
 import chalk from "chalk";
 
 /**
@@ -35,13 +35,13 @@ async function compareFile(
  * @param fileName - The name of the file to compare.
  * @param localDir - The path to the local directory.
  * @param registryDir - The path to the registry directory.
- * @returns FileDiff object representing the comparison result 
+ * @returns FileStatus object representing the comparison result 
  */
-async function getFileDiffStatus(
+async function getFileStatus(
     fileName: string,
     localDir: string,
     registryDir: string
-): Promise<FileDiff> {
+): Promise<FileStatus> {
     const localPath = join(localDir, fileName);
     const registryPath = join(registryDir, fileName);
 
@@ -87,14 +87,14 @@ async function getFileDiffStatus(
  * @param item - The RegistryItem object representing the item.
  * @param config - The CLI configuration object.
  * @param registryBasePath - The base path to the registry directory.
- * @returns ItemDiff object representing the comparison result
+ * @returns ItemStatus object representing the comparison result
  */
 export async function compareItem(
     itemName: string,
     item: RegistryItem,
     config: CliConfig,
     registryBasePath: string
-): Promise<ItemDiff> {
+): Promise<ItemStatus> {
     // if item type is component, use componentsPath, else use utilsPath
     const localBasePath = item.type === ItemType.COMPONENT
         ? config.componentsPath
@@ -119,15 +119,15 @@ export async function compareItem(
     }
 
     // Compare each file
-    const fileDiffs: FileDiff[] = await Promise.all(
+    const fileStatus: FileStatus[] = await Promise.all(
         item.files.map((fileName) =>
-            getFileDiffStatus(fileName, localDir, registryDir)
+            getFileStatus(fileName, localDir, registryDir)
         )
     );
 
     // Determine overall item status
-    const hasModified = fileDiffs.some(file => file.status === StatusFileOptions.MODIFIED);
-    const hasMissing = fileDiffs.some(file => 
+    const hasModified = fileStatus.some(file => file.status === StatusFileOptions.MODIFIED);
+    const hasMissing = fileStatus.some(file => 
         file.status === StatusFileOptions.MISSING_IN_LOCAL || file.status === StatusFileOptions.MISSING_IN_REGISTRY || file.status === StatusFileOptions.MISSING
     );
 
@@ -137,28 +137,28 @@ export async function compareItem(
         name: itemName,
         type: item.type,
         status: itemStatus,
-        files: fileDiffs,
+        files: fileStatus,
     };
 }
 
-/** * Displays the diff result in the console.
- * @param diff - The ItemDiff object to display.
- * @param detailed - Whether to display detailed file diffs.
+/** * Displays the status result in the console.
+ * @param status - The ItemStatus object to display.
+ * @param detailed - Whether to display detailed file status.
  */
-export function displayDiff (diff: ItemDiff, detailed: boolean = false) {
+export function displayStatus (status: ItemStatus, detailed: boolean = false) {
     const statusColors = {
         [StatusItemsOptions.NOT_INSTALLED]: chalk.red,
         [StatusItemsOptions.UP_TO_DATE]: chalk.green,
         [StatusItemsOptions.MODIFIED]: chalk.yellow,
     };
-    const color = statusColors[diff.status];
-    const typeLabel = diff.type === "component" ? "Component" : "Util";
+    const color = statusColors[status.status];
+    const typeLabel = status.type === "component" ? "Component" : "Util";
     // Example output: "MODIFIED - Component: Button"
-    console.log(`${color(diff.status.toUpperCase())} - ${typeLabel}: ${diff.name}`);
+    console.log(`${color(status.status.toUpperCase())} - ${typeLabel}: ${status.name}`);
 
-    // Detailed file diffs
-    if (detailed && diff.files.length > 0) {
-        diff.files.forEach(file => {
+    // Detailed file Statuss
+    if (detailed && status.files.length > 0) {
+        status.files.forEach(file => {
             const fileStatusColors = {
                 [StatusFileOptions.IDENTICAL]: chalk.green,
                 [StatusFileOptions.MODIFIED]: chalk.yellow,

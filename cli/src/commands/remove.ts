@@ -4,7 +4,7 @@ import { confirmAction, ensureItemName } from "../utils/prompt";
 import { getItem, getItemDestPath, getRegistry } from "../utils/registry";
 import { resolve } from "path";
 import fsExtra from "fs-extra/esm";
-import { RegistryItem } from "../types";
+import { RegistryItem } from "../types/types";
 
 export async function removeCommand(name? : string) {
     console.log(chalk.bold.blue('\n Remove component or utility\n'));

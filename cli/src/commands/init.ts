@@ -1,7 +1,7 @@
 import chalk from "chalk";
 import { configExists, writeConfig } from "../utils/config";
 import inquirer from "inquirer";
-import { CliConfig } from "../types";
+import { CliConfig } from "../types/types";
 
 /**
  * Action handler for the 'init' command.

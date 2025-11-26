@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 import { dirname, join, resolve } from "path";
 import { copyDirectory } from "../utils/fileManager";
 import { addDependencyToPackageJson } from "../utils/dependencies";
-import { RegistryItem } from "../types";
+import { RegistryItem } from "../types/types";
 import { confirmAction, ensureItemName } from "../utils/prompt";
 import fsExtra from "fs-extra/esm";
 

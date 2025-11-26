@@ -1,5 +1,5 @@
 import { basename } from "path";
-import { Registry } from "../types";
+import { Registry } from "../types/types";
 
 /**
  * Check if the registry has a specific key ex: component or utility name

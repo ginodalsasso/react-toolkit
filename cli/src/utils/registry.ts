@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import type { CliConfig, Registry, RegistryItem } from '../types/index.js';
+import type { CliConfig, Registry, RegistryItem } from '../types/types';
 
 /**
  * This file contains utility functions to read and interact with the registry.json file in the registry folder,

@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join } from 'path';
-import { CliConfig } from '../types';
+import { CliConfig } from '../types/types';
 import chalk from 'chalk';
 
 /**

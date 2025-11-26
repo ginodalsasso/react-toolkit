@@ -11,7 +11,7 @@ A command-line interface tool for managing reusable React components and utiliti
 - **Smart Dependencies** - Automatically adds required dependencies to package.json
 - **Configuration System** - Customizable paths and styling preferences
 - **Registry Browser** - List and explore available components and utils
-- **Diff comparison** - Compare your local code with the version from the registry.
+- **Status comparison** -Compare your local status with the version from the registry.
 - **Clean Removal** - Remove components and their associated files
 - **Type-Safe** - Built with TypeScript for better developer experience
 
