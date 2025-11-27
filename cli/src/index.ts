@@ -51,13 +51,17 @@ program
 program
     .command("add [name]")
     .description("Add a new component")
-    .action(addCommand);
+    .action((name) => {
+        addCommand(name);
+    });
 
 // Remove commands
 program
     .command("remove [name]")
     .description("Remove an existing component or utility")
-    .action(removeCommand);
+    .action((name) => {
+        removeCommand(name);
+    });
 
 // Status commands
 program
@@ -66,6 +70,14 @@ program
     .option("-d, --detailled", "Show detailed differences")
     .action((name, options) => {
         statusCommand(name, options);
+    });
+
+// Diff commands
+program
+    .command("diff [name]")
+    .description("Show differences between installed and registry versions of a component or utility")
+    .action((name) => {
+        diffCommand(name);
     });
 
 

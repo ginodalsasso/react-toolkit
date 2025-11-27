@@ -1,7 +1,8 @@
 import fsExtra from "fs-extra/esm";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { CliConfig, FileStatus, FolderType, ItemStatus, ItemType, RegistryItem, StatusFileOptions, StatusItemsOptions } from "../types/types";
+import { CliConfig, FileStatus, ItemStatus, RegistryItem } from "../types/types";
+import { FolderType, ItemType, StatusFileOptions, StatusItemsOptions } from "../types/enums";
 import chalk from "chalk";
 
 /**

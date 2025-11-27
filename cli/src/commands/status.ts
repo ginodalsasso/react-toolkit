@@ -5,7 +5,8 @@ import { ensureItemName } from "../utils/prompt";
 import { getAllItems, getItem, getRegistry } from "../utils/registry";
 import { dirname, join } from "path";
 import chalk from "chalk";
-import { CliConfig, Registry, StatusItemsOptions } from "../types/types";
+import { CliConfig, Registry } from "../types/types";
+import { StatusItemsOptions } from "../types/enums";
 
 /**
  * Get the current file name and directory name
