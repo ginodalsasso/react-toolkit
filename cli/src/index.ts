@@ -1,10 +1,10 @@
 import { Command } from "commander";
-import chalk from "chalk";
 import { listCommand } from "./commands/list";
 import { initCommand } from "./commands/init";
 import { addCommand } from "./commands/add";
 import { removeCommand } from "./commands/remove";
 import { statusCommand } from "./commands/status";
+import { diffCommand } from "./commands/diff";
 
 const program = new Command();
 
@@ -67,7 +67,7 @@ program
 program
     .command("status [name]")
     .description("Compare installed components/utils with registry versions to show the status")
-    .option("-d, --detailled", "Show detailed differences")
+    .option("-d, --detailled", "Show detailed status")
     .action((name, options) => {
         statusCommand(name, options);
     });
