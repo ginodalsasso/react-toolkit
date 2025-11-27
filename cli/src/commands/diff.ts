@@ -2,17 +2,9 @@ import chalk from "chalk";
 import { ensureConfig } from "../utils/config";
 import { getItem, getRegistry } from "../utils/registry";
 import { ensureItemName } from "../utils/prompt";
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
 import { compareItem } from "../utils/status";
 import { StatusFileOptions, StatusItemsOptions } from "../types/enums";
-
-/**
- * Get the current file name and directory name
- */
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const __registryPath = join(__dirname, '../../registry');
+import { __registryPath } from "../constants";
 
 /**
  * Diff command to show line-by-line differences between local and registry files

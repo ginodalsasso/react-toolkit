@@ -1,21 +1,13 @@
 import chalk from "chalk";
 import { ensureConfig } from "../utils/config";
 import { getItem, getItemDestPath, getRegistry } from "../utils/registry";
-import { fileURLToPath } from "url";
-import { dirname, join, resolve } from "path";
 import { copyDirectory } from "../utils/fileManager";
 import { addDependencyToPackageJson } from "../utils/dependencies";
 import { RegistryItem } from "../types/types";
 import { confirmAction, ensureItemName } from "../utils/prompt";
 import fsExtra from "fs-extra/esm";
-
-/**
- * Get the current file name and directory name
- */
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const __registryPath = join(__dirname, '../../registry');
-
+import { __registryPath } from "../constants";
+import { join, resolve } from "path";
 /**
  * Add command to add a component or utility from the registry to the project
  * @param name Optional name of the component or utility to add

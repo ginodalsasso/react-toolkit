@@ -1,17 +1,12 @@
 import { readFileSync } from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import { join } from 'path';
 import type { CliConfig, Registry, RegistryItem } from '../types/types';
+import { __registryPath } from '../constants';
 
 /**
  * This file contains utility functions to read and interact with the registry.json file in the registry folder,
  * including functions to get all items, get a specific item.
  */
-
-// get __dirname in ES module scope
-const __filename = fileURLToPath(import.meta.url); // convert URL to path
-const __dirname = dirname(__filename); // get directory name
-const __registryPath = join(__dirname, '../../registry');
 
 /**
  * read and parse registry.json

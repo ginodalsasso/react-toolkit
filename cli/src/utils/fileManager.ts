@@ -2,7 +2,6 @@ import chalk from "chalk";
 import fsExtra from "fs-extra/esm";
 import { dirname } from "node:path";
 
-
 /**
  * Copies a directory from the source path to the destination path.
  * @param sourceDir The path to the source directory.

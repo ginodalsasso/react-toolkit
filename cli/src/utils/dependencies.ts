@@ -1,7 +1,7 @@
 import chalk from "chalk";
 import fsExtra from "fs-extra";
 import { PackageJson } from "../types/types";
-import { join } from "path";
+import { __pkgJsonPath } from "../constants";
 
 /**
  * Reads the package.json file from the current working directory.
@@ -9,13 +9,14 @@ import { join } from "path";
  */
 export async function readPackageJson(): Promise<PackageJson | null> {
     try {
-        const pkgPath = join(process.cwd(), 'package.json');
-        if (!await fsExtra.pathExists(pkgPath)) {
-            console.error(chalk.red('package.json not found in the current directory.'));
+        if (!(await fsExtra.pathExists(__pkgJsonPath))) {
+            console.error(
+                chalk.red("package.json not found in the current directory.")
+            );
             return null;
         }
 
-        const content = await fsExtra.readFile(pkgPath, 'utf-8');
+        const content = await fsExtra.readFile(__pkgJsonPath, "utf-8");
         return JSON.parse(content);
     } catch (error) {
         console.error(chalk.red(`Error reading package.json: ${error}`));
@@ -29,10 +30,9 @@ export async function readPackageJson(): Promise<PackageJson | null> {
  */
 export async function writePackageJson(pkg: PackageJson): Promise<boolean> {
     try {
-        const pkgPath = join(process.cwd(), 'package.json');
         const content = JSON.stringify(pkg, null, 4) + '\n';
 
-        await fsExtra.writeFile(pkgPath, content, 'utf-8');
+        await fsExtra.writeFile(__pkgJsonPath, content, "utf-8");
         return true;
     } catch (error) {
         console.error(chalk.red(`Error writing package.json: ${error}`));

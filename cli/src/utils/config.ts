@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync, existsSync } from 'fs';
-import { join } from 'path';
 import { CliConfig } from '../types/types';
 import chalk from 'chalk';
+import { __configPath } from '../constants';
 
 /**
  * This file contains utility functions to read and write the CLI configuration file (.my-cli.json)
@@ -11,14 +11,13 @@ import chalk from 'chalk';
 
 /* Configuration file path */
 const __filename = ".my-cli.json";
-const configPath = join(process.cwd(), __filename);
 
 /**
  * returns true if the config file exists 
  * in the current working directory
  */
 export function configExists(): boolean {
-    return existsSync(configPath);
+    return existsSync(__configPath);
 }
 
 /**
@@ -26,7 +25,7 @@ export function configExists(): boolean {
  */
 export function readConfig(): CliConfig | null {
     try {
-        const content = readFileSync(configPath, 'utf-8');  
+        const content = readFileSync(__configPath, 'utf-8');  
         const config: CliConfig = JSON.parse(content);
 
         return config;
@@ -42,7 +41,7 @@ export function readConfig(): CliConfig | null {
 export function writeConfig(config: CliConfig): void {
     try {
         const content = JSON.stringify(config, null, 4);
-        writeFileSync(configPath, content, 'utf-8');
+        writeFileSync(__configPath, content, 'utf-8');
     } catch (error) {
         console.error('Error writing config:', error);
         process.exit(1);

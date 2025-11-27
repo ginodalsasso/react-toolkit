@@ -1,19 +1,11 @@
-import { fileURLToPath } from "url";
 import { ensureConfig } from "../utils/config";
 import { compareItem, displayStatus } from "../utils/status";
 import { ensureItemName } from "../utils/prompt";
 import { getAllItems, getItem, getRegistry } from "../utils/registry";
-import { dirname, join } from "path";
 import chalk from "chalk";
 import { CliConfig, Registry } from "../types/types";
 import { StatusItemsOptions } from "../types/enums";
-
-/**
- * Get the current file name and directory name
- */
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const __registryPath = join(__dirname, '../../registry');
+import { __registryPath } from "../constants";
 
 /**
  * Status command to compare installed components/utils with registry versions

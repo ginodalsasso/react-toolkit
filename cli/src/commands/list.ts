@@ -1,6 +1,6 @@
 import chalk from "chalk";
 import { getRegistry } from "../utils/registry.js";
-import { RegistryItem } from "../types/types.js";
+import { RegistryItem } from "../types/types";
 
 /**
  * List command to display all components and utilities from the registry
