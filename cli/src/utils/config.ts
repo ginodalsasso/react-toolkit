@@ -9,9 +9,6 @@ import { __configPath } from '../constants';
  * ex: componentsPath, utilsPath, typescript, styling
  */
 
-/* Configuration file path */
-const __filename = ".my-cli.json";
-
 /**
  * returns true if the config file exists 
  * in the current working directory

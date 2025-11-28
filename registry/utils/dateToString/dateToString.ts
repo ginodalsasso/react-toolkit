@@ -3,6 +3,6 @@ export function dateToString(date: Date): string {
         year: "numeric",
         month: "long",
         day: "numeric",
-        timeZone: "UTC",
+        timeZone: "US/Eastern",
     });
 }

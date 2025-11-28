@@ -129,10 +129,14 @@ export async function compareItem(
     // Determine overall item status
     const hasModified = fileStatus.some(file => file.status === StatusFileOptions.MODIFIED);
     const hasMissing = fileStatus.some(file => 
-        file.status === StatusFileOptions.MISSING_IN_LOCAL || file.status === StatusFileOptions.MISSING_IN_REGISTRY || file.status === StatusFileOptions.MISSING
+        file.status === StatusFileOptions.MISSING_IN_LOCAL 
+        || file.status === StatusFileOptions.MISSING_IN_REGISTRY 
+        || file.status === StatusFileOptions.MISSING
     );
 
-    const itemStatus = hasModified || hasMissing ? StatusItemsOptions.MODIFIED : StatusItemsOptions.UP_TO_DATE;
+    const itemStatus = hasModified || hasMissing 
+        ? StatusItemsOptions.MODIFIED 
+        : StatusItemsOptions.UP_TO_DATE;
 
     return {
         name: itemName,

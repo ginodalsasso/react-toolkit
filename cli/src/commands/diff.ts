@@ -5,6 +5,7 @@ import { ensureItemName } from "../utils/prompt";
 import { compareItem } from "../utils/status";
 import { StatusFileOptions, StatusItemsOptions } from "../types/enums";
 import { __registryPath } from "../constants";
+import { readFileSync } from "fs";
 
 /**
  * Diff command to show line-by-line differences between local and registry files
@@ -19,8 +20,6 @@ export async function diffCommand(name? : string) {
         const item = getItem(registry, selectedName);
 
         const status = await compareItem(selectedName, item, config, __registryPath);
-
-        console.log(chalk.cyan(`Item: ${chalk.bold(item.name)} (${item.type})\n`));
 
         if (status.status === StatusItemsOptions.NOT_INSTALLED) {
             console.log(chalk.yellow(`The item ${item.name} is not installed in the project.`));
@@ -73,5 +72,41 @@ export async function diffCommand(name? : string) {
     } catch (error) {
         console.error(chalk.red(error));
         process.exit(1);    
+    }
+}
+
+async function showLineDiff(registryFilePath: string, localFilePath: string) {
+    try {
+        const registryContent = readFileSync(registryFilePath, 'utf-8');
+        const localContent = readFileSync(localFilePath, 'utf-8');
+
+        const registryLines = registryContent.split('\n');
+        const localLines = localContent.split('\n');
+
+        // Calculate the maximum number of lines to compare
+        const maxLines = Math.max(registryLines.length, localLines.length);
+
+        for (let i = 0; i < maxLines; i++) {
+            const lineNumber = i+1;
+            const registryLine = registryLines[i] || '';
+            const localLine = localLines[i] || '';
+
+            const isInLocal = localLine !== '';
+            const isInRegistry = registryLine !== '';
+
+            if (localLine === registryLine) {
+                continue;
+            } else if (isInLocal && !isInRegistry) {
+                console.log(chalk.green(`+ [L${lineNumber}] | ${localLine}`));
+            } else if (!isInLocal && isInRegistry) {
+                console.log(chalk.red(`- [L${lineNumber}] | ${registryLine}`));
+            } else {
+                console.log(chalk.red(`- [L${lineNumber}] | ${registryLine}`));
+                console.log(chalk.green(`+ [L${lineNumber}] | ${localLine}`));
+            }
+        }
+    } catch (error) {
+        console.error(chalk.red(`Error showing diff for files:\nRegistry: ${registryFilePath}\nLocal: ${localFilePath}\n${error}`));
+        process.exit(1);
     }
 }

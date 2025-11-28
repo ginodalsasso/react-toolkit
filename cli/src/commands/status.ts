@@ -39,10 +39,10 @@ async function statusSingleItem(
     registry: Registry,
     detailled: boolean
 ) {
-    ensureItemName(itemName, registry, "check");
-    const item = getItem(registry, itemName);
+    const selectedName = await ensureItemName(itemName, registry, "check");
+    const item = getItem(registry, selectedName);
 
-    const status = await compareItem(itemName, item, config, __registryPath);
+    const status = await compareItem(selectedName, item, config, __registryPath);
     displayStatus(status, detailled);
 }
 
